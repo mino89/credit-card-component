@@ -1,0 +1,163 @@
+:host {
+  --main-color: rgb(138, 138, 138);
+  --main-color-lights: rgb(169, 169, 169);
+  --main-color-shadows: rgb(114, 113, 113);
+  --main-color-text: rgb(221, 221, 221);
+}
+
+.card {
+  &-number {
+    width: 100%;
+    flex: 1;
+  }
+
+  &-cvc {
+    flex: 1;
+
+    input {
+      width: 100%;
+    }
+  }
+}
+
+input {
+  transition: color 0.3s;
+}
+
+select {
+  appearance: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card-logo {
+  height: 2.5rem;
+  width: 3.5rem;
+  position: absolute;
+  right: 10%;
+  bottom: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  img {
+    position: absolute;
+    width: 80%;
+    margin: 0px;
+    padding: 0px;
+  }
+}
+
+
+.card-preview {
+  background-color: transparent;
+  width: 320px;
+  height: 200px;
+  perspective: 1000px;
+  margin: 1rem auto;
+
+  @media screen and (max-width: 460px) {
+    width: 100%;
+
+    .card-chip {
+      top: 20% !important;
+    }
+  }
+}
+
+.card-preview-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+
+}
+
+.card-preview:hover .card-preview-inner,
+.flipped .card-preview-inner {
+  transform: rotateY(180deg);
+}
+
+.card-preview-front,
+.card-preview-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.card-preview-front {
+
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Courier New", Courier, monospace;
+
+  .card-chip {
+    height: 2.5rem;
+    width: 2.5rem;
+    position: absolute;
+    top: 30%;
+    left: 10%;
+  }
+
+  .card-num {
+    position: absolute;
+    bottom: 35%;
+    left: 10%;
+    font-size: 1.25rem;
+  }
+
+  .card-exp {
+    position: absolute;
+    bottom: 10%;
+    left: 10%;
+    align-items: center;
+    font-size: 1.5rem;
+    display: flex;
+
+    em {
+      display: flex;
+      flex-direction: column;
+      font-size: 10px;
+      font-style: normal;
+      margin-right: 0.25rem;
+    }
+  }
+
+}
+
+.card-preview-back {
+  transform: rotateY(180deg);
+  position: absolute;
+
+  .card-band {
+    height: 3rem;
+    width: 100%;
+    position: absolute;
+    opacity: 0.8;
+    top: 10%;
+  }
+
+  .card-cvc {
+    height: 2rem;
+    width: 60%;
+    top: 40%;
+    left: 10%;
+    padding: 0.25rem;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
+.error {
+  border-color: rgb(187, 59, 59);
+}

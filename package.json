@@ -2,6 +2,7 @@
   "name": "credit-card",
   "description": "Webcomponent credit-card following open-wc recommendations",
   "license": "MIT",
+  "homepage": "https://mino89.github.io/credit-card-component/",
   "author": "credit-card",
   "version": "0.0.0",
   "main": "index.js",

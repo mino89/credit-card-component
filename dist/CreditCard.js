@@ -24,7 +24,27 @@ var t;const i=globalThis.trustedTypes,s$1=i?i.createPolicy("lit-html",{createHTM
  * SPDX-License-Identifier: BSD-3-Clause
  */var l,o;class s extends a$1{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0;}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const i=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=x(i,this.renderRoot,this.renderOptions);}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!0);}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!1);}render(){return b}}s.finalized=!0,s._$litElement$=!0,null===(l=globalThis.litElementHydrateSupport)||void 0===l||l.call(globalThis,{LitElement:s});const n=globalThis.litElementPolyfillSupport;null==n||n({LitElement:s});(null!==(o=globalThis.litElementVersions)&&void 0!==o?o:globalThis.litElementVersions=[]).push("3.2.1");
 
-const Validate = {
+class Validate {
+
+    constructor() {
+        this.errors = [];
+        this.validation = [];
+    }
+
+
+    getErrors() {
+
+        return this.errors
+    }
+    addError(e) {
+        if (!this.errors.includes(e.name)) this.errors.push(e.name);
+    }
+
+    removeError(e) {
+        const errors = this.errors;
+        if (errors.includes(e.name)) errors.splice(errors.indexOf(e.name), 1);
+    }
+
     luhnCheck(num) {
         let arr = (num + '')
             .split('')
@@ -34,184 +54,50 @@ const Validate = {
         let sum = arr.reduce((acc, val, i) => (i % 2 !== 0 ? acc + val : acc + ((val * 2) % 9) || 9), 0);
         sum += lastDigit;
         return sum % 10 === 0;
-    },
+    }
+
     validateCardLength(e) {
         const value = e.target.value;
+        const name = e.target;
         if (value && value.length <= e.target.maxLength && this.luhnCheck(value.replace(/\s/g, ""))) {
+            this.removeError(name);
             e.target.setCustomValidity("");
         } else {
+            this.addError(name);
             e.target.setCustomValidity(true);
         }
-    },
+    }
+
+    checkField(field){
+        if (field.checkValidity()) {
+            this.removeError(field);
+            field.parentNode.classList.remove('error');
+            field.removeAttribute('aria-invalid');
+            this.validation.push(true);
+        } else {
+            this.addError(field);
+            field.parentNode.classList.add('error');
+            field.setAttribute('aria-invalid', true);
+            this.validation.push(false);
+        }
+   
+    }
+
     validateData(e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         const fields = Array.from(e.target.elements);
-        const  validation = [];
+        this.validation = [];
         fields.forEach((field) => {
             if (field.required) {
-                if (field.checkValidity()) {
-                    field.classList.remove('error');
-                    validation.push(true);
-                } else {
-                    field.classList.add('error');
-                    validation.push(false);
-                }
+                this.checkField(field);
             }
         });
-        return validation.includes(false) ? false : true
-    },
-};
-
-const styles = r$3`:host {
-  --main-color: rgb(138, 138, 138);
-  --main-color-lights: rgb(169, 169, 169);
-  --main-color-shadows: rgb(114, 113, 113);
-  --main-color-text: rgb(221, 221, 221);
+        return this.validation.includes(false) ? false : true
+    }
 }
 
-.card-number {
-  width: 100%;
-  flex: 1;
-}
-.card-cvc {
-  flex: 1;
-}
-.card-cvc input {
-  width: 100%;
-}
-
-input {
-  transition: color 0.3s;
-}
-
-select {
-  appearance: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-}
-
-.card-logo {
-  height: 2.5rem;
-  width: 3.5rem;
-  position: absolute;
-  right: 10%;
-  bottom: 10%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.25rem;
-}
-.card-logo img {
-  position: absolute;
-  width: 80%;
-  margin: 0px;
-  padding: 0px;
-}
-
-.card-preview {
-  background-color: transparent;
-  width: 320px;
-  height: 200px;
-  perspective: 1000px;
-  margin: 1rem auto;
-}
-@media screen and (max-width: 460px) {
-  .card-preview {
-    width: 100%;
-  }
-  .card-preview .card-chip {
-    top: 20% !important;
-  }
-}
-
-.card-preview-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-}
-
-.card-preview:hover .card-preview-inner,
-.flipped .card-preview-inner {
-  transform: rotateY(180deg);
-}
-
-.card-preview-front,
-.card-preview-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 1rem;
-  overflow: hidden;
-}
-
-.card-preview-front {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "Courier New", Courier, monospace;
-}
-.card-preview-front .card-chip {
-  height: 2.5rem;
-  width: 2.5rem;
-  position: absolute;
-  top: 30%;
-  left: 10%;
-}
-.card-preview-front .card-num {
-  position: absolute;
-  bottom: 35%;
-  left: 10%;
-  font-size: 1.25rem;
-}
-.card-preview-front .card-exp {
-  position: absolute;
-  bottom: 10%;
-  left: 10%;
-  align-items: center;
-  font-size: 1.5rem;
-  display: flex;
-}
-.card-preview-front .card-exp em {
-  display: flex;
-  flex-direction: column;
-  font-size: 10px;
-  font-style: normal;
-  margin-right: 0.25rem;
-}
-
-.card-preview-back {
-  transform: rotateY(180deg);
-  position: absolute;
-}
-.card-preview-back .card-band {
-  height: 3rem;
-  width: 100%;
-  position: absolute;
-  opacity: 0.8;
-  top: 10%;
-}
-.card-preview-back .card-cvc {
-  height: 2rem;
-  width: 60%;
-  top: 40%;
-  left: 10%;
-  padding: 0.25rem;
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.error {
-  border-color: rgb(187, 59, 59);
-}`;
+const styles = r$3`:host{--main-color:#8a8a8a;--main-color-lights:#a9a9a9;--main-color-shadows:#727171;--main-color-text:#ddd}.card-number{width:100%;flex:1}.card-cvc{flex:1}.card-cvc input{width:100%}input{transition:color .3s}select{appearance:none;border:0;padding:0;margin:0}.card-logo{height:2.5rem;width:3.5rem;position:absolute;right:10%;bottom:10%;display:flex;align-items:center;justify-content:center;border-radius:.25rem}.card-logo img{position:absolute;width:80%;margin:0;padding:0}.card-preview{background-color:transparent;width:320px;height:200px;perspective:1000px;margin:1rem auto}@media screen and (max-width:460px){.card-preview{width:100%}.card-preview .card-chip{top:20% !important}}.card-preview-inner{position:relative;width:100%;height:100%;text-align:center;transition:transform .6s;transform-style:preserve-3d}.card-preview:hover .card-preview-inner,.flipped .card-preview-inner{transform:rotateY(180deg)}.card-preview-front,.card-preview-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:1rem;overflow:hidden}.card-preview-front{position:absolute;display:flex;align-items:center;justify-content:center;font-family:"Courier New",Courier,monospace}.card-preview-front .card-chip{height:2.5rem;width:2.5rem;position:absolute;top:30%;left:10%}.card-preview-front .card-num{position:absolute;bottom:35%;left:10%;font-size:1.25rem}.card-preview-front .card-exp{position:absolute;bottom:10%;left:10%;align-items:center;font-size:1.5rem;display:flex}.card-preview-front .card-exp em{display:flex;flex-direction:column;font-size:10px;font-style:normal;margin-right:.25rem}.card-preview-back{transform:rotateY(180deg);position:absolute}.card-preview-back .card-band{height:3rem;width:100%;position:absolute;opacity:.8;top:10%}.card-preview-back .card-cvc{height:2rem;width:60%;top:40%;left:10%;padding:.25rem;position:absolute;display:flex;align-items:center;justify-content:flex-end}.error{border-color:#bb3b3b}`;
 
 /**
  * A simple guard function:
@@ -538,16 +424,14 @@ class CreditCardPreview extends s {
 
     static styles = [styles, r$3`.card-preview-front{background:var(--bg-color);color:var(--bg-color-text);text-shadow:1px 1px 1px var(--bg-color-shadow)}.card-preview-back{background:var(--bg-color-dark)}.card-band{background:var(--bg-color-deep-dark)}.card-cvc{background:var(--bg-color-light)}.card-preview-back,.card-preview-front{box-shadow:0 4px 8px 0 var(--bg-color-shadow)}.card-logo{background:var(--bg-color-transparent-light)}`]
 
-    updated() {
-        console.log(this.flipped);
-        this.style = "";
-        this.updateColors();
-    }
-
-
     render() {
         const type = CardType.getImg(this.card?.number);
-        return $`${this.flipped}<div class="card-preview ${this.flipped ? 'flipped' : ''}"><div class="card-preview-inner"><div class="card-preview-front"><div class="card-num">${Format.cardFormat(this.card?.number) || '#### #### #### ####'}</div><div class="card-exp"><div><em><b>VALID</b> <b>THRU</b></em></div>${this.card?.month || '##'}/${this.card?.year || '##'}</div><div class="card-logo"><img src="${type.url}" alt="${type.name}"></div></div><div class="card-preview-back"><div class="card-band"></div><div class="card-cvc">${this.card?.cvc || '###'}</div></div></div></div>`;
+        return $`${this.flipped}<div class="card-preview ${this.flipped ? 'flipped' : ''}"><div class="card-preview-inner"><div class="card-preview-front"><div class="card-num">${Format.cardFormat(this.card?.number) || '#### #### #### ####'}</div><div class="card-exp"><div><em><b>VALID</b> <b>THRU</b></em></div>${this.card?.month || '##'}/${this.card?.year || '##'}</div><div class="card-logo"><img ?hidden="${!this.card?.number}" src="${type?.url}" alt="${type?.name}"></div></div><div class="card-preview-back"><div class="card-band"></div><div class="card-cvc">${this.card?.cvc || '###'}</div></div></div></div>`;
+    }
+
+    updated() {
+        this.style = "";
+        this.updateColors();
     }
 
     updateColors() {
@@ -570,16 +454,21 @@ class CreditCardPreview extends s {
 
 window.customElements.define('credit-card-preview', CreditCardPreview);
 
+const validate = new Validate();
 class CreditCard extends s {
 
   static get styles() {
-    return r$3`.error:invalid{border:1px solid red}`
+    return r$3`.error input:invalid{border:1px solid red}`
   }
   static get properties() {
     return {
       card: { type: Object },
       color: { type: String },
-      flipped: { type: Boolean }
+      flipped: { type: Boolean },
+      cardHint: { name: 'card-hint', type: String },
+      monthHint: { name: 'month-hint', type: String },
+      yearHint: { name: 'year-hint', type: String },
+      cvcHint: { name: 'cvc-hint', type: String }
     }
   }
   constructor(
@@ -591,34 +480,57 @@ class CreditCard extends s {
       month: '',
       cvc: '',
     };
+    this.errors = validate.getErrors();
     this.flipped = false;
+    this.cardHint = "Your card number format is wrong";
+    this.monthHint = "Your month format is wrong";
+    this.yearHint = "Your year format is wrong";
+    this.cvcHint = "Your cvc format is wrong";
+  }
+
+
+  render() {
+    return $`<credit-card-preview .card="${this.card}" .flipped="${this.flipped}" color="${this.color}"></credit-card-preview><form @input="${this.inputHandler}" @submit="${this.submitEventHandler}" novalidate><fieldset><input name="number" .value="${this.card.number}" minlength="14" maxlength="16" pattern="^[0-9]*$" @blur="${this.validateCardHandler}" aria-describedby="cardHint" required><p ?hidden="${!this.errors.includes('number')}" class="hint" id="cardHint">${this.cardHint}</p></fieldset><fieldset><input name="month" .value="${this.card.month}" maxlength="2" pattern="^[0-9]{2}$" @blur="${this.checkSingle}" aria-describedby="monthHint" required><p ?hidden="${!this.errors.includes('month')}" class="hint" id="monthHint">${this.monthHint}</p></fieldset><fieldset><input name="year" .value="${this.card.year}" maxlength="2" pattern="^[0-9]{2}$" aria-describedby="yearHint" @blur="${this.checkSingle}" required><p ?hidden="${!this.errors.includes('year')}" class="hint" id="yearHint">${this.yearHint}</p></fieldset><fieldset><input name="cvc" .value="${this.card.cvc}" maxlength="3" pattern="^[0-9]{3}$" @focus="${this.flipCard}" @blur="${this.flipCard}" aria-describedby="cvcHint" required><p ?hidden="${!this.errors.includes('cvc')}" class="hint" id="cvcHint">${this.cvcHint}</p></fieldset><button type="submit">submit</button></form>`;
   }
 
   updated() {
     this.shadowRoot.querySelector('credit-card-preview').requestUpdate();
   }
-  
-  render() {
-    return $`<credit-card-preview .card="${this.card}" .flipped="${this.flipped}" color="${this.color}"></credit-card-preview><form @submit="${this._submitEventHandler}" novalidate><input name="number" .value="${this.card.number}" minlength="14" maxlength="16" pattern="^[0-9]*$" @input="${this._validateCardHandler}" required> <input name="month" .value="${this.card.month}" minlength="2" maxlength="2" pattern="^[0-9]*$" @input="${this._inputHandler}" required> <input name="year" .value="${this.card.year}" minlength="2" maxlength="2" pattern="^[0-9]*$" @input="${this._inputHandler}" required> <input name="cvc" .value="${this.card.cvc}" minlength="3" maxlength="3" pattern="^[0-9]*$" @input="${this._inputHandler}" @focus="${this.flipCard}" @blur="${this.flipCard}" required> <button type="submit">submit</button></form>`;
-  }
-  flipCard(e){
+
+  flipCard(e) {
+    this.checkSingle(e);
     this.flipped = !this.flipped;
   }
-  _inputHandler(e) {
+
+  checkSingle(e){
+    validate.checkField(e.target);
+    this.requestUpdate();
+  }
+
+  inputHandler(e) {
     this.card[e.target.name] = e.target.value;
     this.requestUpdate();
   }
-  _validateCardHandler(e){
-    Validate.validateCardLength(e);
-    this._inputHandler(e);
+
+  validateCardHandler(e) {
+    validate.validateCardLength(e);
+    this.inputHandler(e);
   }
-  _submitEventHandler(e) {
-    if(Validate.validateData(e))
-    this.dispatchEvent(new CustomEvent('card-data', {
+
+  resetCard(){
+    Object.keys(this.card).forEach(el => this.card[el] = "");
+  }
+
+  submitEventHandler(e) {
+    if (validate.validateData(e)) {
+      this.dispatchEvent(new CustomEvent('card-data', {
         composed: true,
         bubbles: true,
         detail: this.card
-    }));
+      }));
+      this.resetCard();
+    }
+    this.requestUpdate();
   }
 }
 

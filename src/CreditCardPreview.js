@@ -42,13 +42,6 @@ export class CreditCardPreview extends LitElement {
         }
     `]
 
-    updated() {
-        console.log(this.flipped)
-        this.style = ""
-        this.updateColors()
-    }
-
-
     render() {
         const type = CardType.getImg(this.card?.number)
         return html`
@@ -67,7 +60,7 @@ export class CreditCardPreview extends LitElement {
                         ${this.card?.month || '##'}/${this.card?.year || '##'}
                     </div>
                     <div class="card-logo">
-                        <img src="${type.url}" alt="${type.name}"/>
+                        <img ?hidden=${!this.card?.number}  src="${type?.url}" alt="${type?.name}"/>
                     </div>
                 </div>
                 <div class="card-preview-back">
@@ -77,6 +70,11 @@ export class CreditCardPreview extends LitElement {
             </div>
         </div>
         `;
+    }
+
+    updated() {
+        this.style = ""
+        this.updateColors()
     }
 
     updateColors() {

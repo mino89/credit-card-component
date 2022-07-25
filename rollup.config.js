@@ -31,6 +31,7 @@ const config = [
       resolve(),
       litcss({
         include: '/**/*.scss',
+        uglify: true,
         transform: (data, { filePath }) =>
           Sass.renderSync({ data, file: filePath })
             .css.toString(),
@@ -61,7 +62,7 @@ const config = [
 
 
 if (process.env.NODE_ENV !== 'development') {
-  config[1].plugins.push(terser());
+  config[0].plugins.push(terser());
 } else {
   config[1].plugins.push(serve({
     open: true,

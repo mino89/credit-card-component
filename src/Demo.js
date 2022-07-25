@@ -11,9 +11,7 @@ export class Demo extends LitElement {
         super();
         this.color = '#32a4dc'
     }
-    updated(){
-        this.shadowRoot.querySelector('credit-card').requestUpdate()
-    }
+
     render() {
         return html` 
             ${this.color}
@@ -22,6 +20,11 @@ export class Demo extends LitElement {
             </credit-card>
         `
     }
+
+    updated(){
+        this.shadowRoot.querySelector('credit-card').requestUpdate()
+    }
+
     changeColorHandler(e){
         this.color = e.target.value
         this.requestUpdate()

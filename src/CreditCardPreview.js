@@ -16,7 +16,6 @@ export class CreditCardPreview extends LitElement {
         this.card = {}
         this.flipped = false
     }
-
     static styles = [Style, css`
         .card-preview-front {
         background: var(--bg-color);
@@ -45,7 +44,6 @@ export class CreditCardPreview extends LitElement {
     render() {
         const type = CardType.getImg(this.card?.number)
         return html`
-        ${this.flipped}
         <div class="card-preview ${this.flipped ? 'flipped' : ''}">
             <div class="card-preview-inner">
                 <div class="card-preview-front">

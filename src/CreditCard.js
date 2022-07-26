@@ -14,7 +14,7 @@ export class CreditCard extends LitElement {
   }
   static get properties() {
     return {
-      card: { type: Object },
+      card: { type: Object, attribute:true },
       color: { type: String },
       flipped: { type: Boolean },
       cardHint: { name: 'card-hint', type: String },
@@ -105,7 +105,7 @@ export class CreditCard extends LitElement {
     this.flipped = !this.flipped
   }
 
-  checkSingle(e){
+  checkSingle(e) {
     validate.checkField(e.target)
     this.requestUpdate()
   }
@@ -120,7 +120,7 @@ export class CreditCard extends LitElement {
     this.inputHandler(e)
   }
 
-  resetCard(){
+  resetCard() {
     Object.keys(this.card).forEach(el => this.card[el] = "")
   }
 
@@ -132,6 +132,7 @@ export class CreditCard extends LitElement {
         detail: this.card
       }));
       this.resetCard()
+      e.target.reset()
     }
     this.requestUpdate()
   }

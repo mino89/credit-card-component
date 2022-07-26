@@ -48,6 +48,7 @@ const config = [
     },
     plugins: [
       nodeResolve(),
+      minifyHTML(),
       commonjs({transformMixedEsModules:true}),
       copy(copyConfig),
       litcss({

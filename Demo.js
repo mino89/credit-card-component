@@ -97,6 +97,31 @@ class Validate {
     }
 }
 
+const styles$1 = r$3`:host {
+  font-family: sans-serif;
+}
+
+fieldset {
+  border: none;
+  margin: 0;
+}
+
+input {
+  width: calc(100% - 1.5em);
+  padding: 0.75em;
+}
+
+input[type=color] {
+  min-height: 3rem;
+}
+
+button {
+  padding: 1em;
+  margin: 0 auto;
+  display: block;
+  cursor: pointer;
+}`;
+
 const styles = r$3`:host {
   --main-color: rgb(138, 138, 138);
   --main-color-lights: rgb(169, 169, 169);
@@ -603,13 +628,11 @@ window.customElements.define('credit-card-preview', CreditCardPreview);
 
 const validate = new Validate();
 class CreditCard extends s {
-
-  static get styles() {
-    return r$3`.error input:invalid{border:1px solid red}`
-  }
+  static styles = [styles$1, r$3`.error input:invalid{border:1px solid red}.hint{margin:0}`
+  ]
   static get properties() {
     return {
-      card: { type: Object, attribute:true },
+      card: { type: Object, attribute: true },
       color: { type: String },
       flipped: { type: Boolean },
       cardHint: { name: 'card-hint', type: String },
@@ -635,7 +658,7 @@ class CreditCard extends s {
     this.cvcHint = "Your cvc format is wrong";
   }
   render() {
-    return $`<credit-card-preview .card="${this.card}" .flipped="${this.flipped}" color="${this.color}"></credit-card-preview><form @input="${this.inputHandler}" @submit="${this.submitEventHandler}" novalidate><fieldset><input name="number" .value="${this.card.number}" minlength="14" maxlength="16" pattern="^[0-9]*$" @blur="${this.validateCardHandler}" aria-describedby="cardHint" required><p ?hidden="${!this.errors.includes('number')}" class="hint" id="cardHint">${this.cardHint}</p></fieldset><fieldset><input name="month" .value="${this.card.month}" maxlength="2" pattern="^[0-9]{2}$" @blur="${this.checkSingle}" aria-describedby="monthHint" required><p ?hidden="${!this.errors.includes('month')}" class="hint" id="monthHint">${this.monthHint}</p></fieldset><fieldset><input name="year" .value="${this.card.year}" maxlength="2" pattern="^[0-9]{2}$" aria-describedby="yearHint" @blur="${this.checkSingle}" required><p ?hidden="${!this.errors.includes('year')}" class="hint" id="yearHint">${this.yearHint}</p></fieldset><fieldset><input name="cvc" .value="${this.card.cvc}" maxlength="3" pattern="^[0-9]{3}$" @focus="${this.flipCard}" @blur="${this.flipCard}" aria-describedby="cvcHint" required><p ?hidden="${!this.errors.includes('cvc')}" class="hint" id="cvcHint">${this.cvcHint}</p></fieldset><button type="submit">submit</button></form>`;
+    return $`<credit-card-preview .card="${this.card}" .flipped="${this.flipped}" color="${this.color}"></credit-card-preview><form @input="${this.inputHandler}" @submit="${this.submitEventHandler}" novalidate><fieldset><input name="number" .value="${this.card.number}" minlength="14" maxlength="16" pattern="^[0-9]*$" @blur="${this.validateCardHandler}" placeholder="Card Number" aria-describedby="cardHint" required><p ?hidden="${!this.errors.includes('number')}" class="hint" id="cardHint">${this.cardHint}</p></fieldset><fieldset><input name="month" .value="${this.card.month}" maxlength="2" pattern="^[0-9]{2}$" @blur="${this.checkSingle}" placeholder="MM" aria-describedby="monthHint" required><p ?hidden="${!this.errors.includes('month')}" class="hint" id="monthHint">${this.monthHint}</p></fieldset><fieldset><input name="year" .value="${this.card.year}" maxlength="2" pattern="^[0-9]{2}$" placeholder="YY" aria-describedby="yearHint" @blur="${this.checkSingle}" required><p ?hidden="${!this.errors.includes('year')}" class="hint" id="yearHint">${this.yearHint}</p></fieldset><fieldset><input name="cvc" .value="${this.card.cvc}" maxlength="3" pattern="^[0-9]{3}$" @focus="${this.flipCard}" @blur="${this.flipCard}" aria-describedby="cvcHint" placeholder="CVV" required><p ?hidden="${!this.errors.includes('cvc')}" class="hint" id="cvcHint">${this.cvcHint}</p></fieldset><button type="submit">submit</button></form>`;
   }
 
   updated() {
@@ -683,6 +706,8 @@ class CreditCard extends s {
 
 window.customElements.define('credit-card', CreditCard);
 
+// import hljs from 'highlight.js';
+// import GitHub from '../node_modules/highlight.js/styles/github-dark-dimmed.css'
 class Demo extends s {
     static get properties() {
         return {
@@ -699,32 +724,40 @@ class Demo extends s {
         };
     }
     static styles = [
-        r$3`@import url(https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css);.grid{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}.column{align-items:center;justify-content:center;display:flex;flex-direction:column}pre{white-space:pre-line}`]
-
+        // GitHub,
+        styles$1,
+        r$3`.grid{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}.column{align-items:center;justify-content:center;display:flex;flex-direction:column}.card{margin-top:17.5vh;min-width:25vw}.badge{display:flex;justify-content:center}.settings{justify-content:space-between}pre{white-space:pre-line;background-color:#2b2a2a;color:#fff;padding:1rem;margin-bottom:0;width:calc(100% - 2rem)}`]
     render() {
-        return $`<div class="grid"><div class="column"><form @input="${this.handleInput}"><fieldset><input type="text" id="cardHint" name="cardHint" placeholder="custom card hint"></fieldset><fieldset><input type="text" id="monthHint" name="monthHint" placeholder="custom month hint"></fieldset><fieldset><input type="text" id="yearHint" name="yearHint" placeholder="custom year hint"></fieldset><fieldset><input type="text" id="cvcHint" name="cvcHint" placeholder="custom cvc hint"></fieldset><fieldset><input type="color" .value="${this.color}" @input="${this.changeColorHandler}" id="colorPicker"></fieldset></form><pre><code class="language-html">${this.renderPreviewProps()}</code></pre></div><div class="column" style="background:${this.color}"><credit-card id="credit-card" .color="${this.color}"></credit-card></div></div>`
+        return $`<div class="grid"><div class="column settings"><form class="card" @input="${this.handleInput}"><fieldset><h1>Customize your component</h1></fieldset><fieldset><input type="text" name="cardHint" placeholder="custom card hint"></fieldset><fieldset><input type="text" name="monthHint" placeholder="custom month hint"></fieldset><fieldset><input type="text" name="yearHint" placeholder="custom year hint"></fieldset><fieldset><input type="text" name="cvcHint" placeholder="custom cvc hint"></fieldset><fieldset><input type="color" name="color" .value="${this.color}" @input="${this.changeColorHandler}" id="colorPicker"></fieldset><a class="badge" href="https://github.com/mino89/credit-card-component"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="github-link"></a></form><pre><code>${this.renderPreviewProps()}</code></pre></div><div class="column" style="background:${this.color}"><credit-card id="credit-card" .color="${this.color}"></credit-card></div></div>`
     }
 
+    // updateHighlight(){
+        
+    //         hljs.highlightElement(this.shadowRoot.querySelector('pre code'));
+     
+    // }
 
-
+    firstUpdated() {
+        this.shadowRoot.querySelectorAll('input').forEach(el => {
+            this.cardHintsBackup[el.name] = this.shadowRoot.querySelector('credit-card')[el.name];
+        });
+        // this.updateHighlight()
+    }
     updated() {
         this.shadowRoot.querySelector('credit-card').requestUpdate();
     }
 
     renderPreviewProps() {
+        console.log();
         const values = [
             `<credit-card \n`,
             `color="${this.color}"> \n`,
             `</credit-card>\n`
         ];
         Object.values(this.previewProps).forEach(value => values.splice(1, 0, value + '\n'));
-        console.log(values);
-        return values
-    }
-    firstUpdated() {
-        this.shadowRoot.querySelectorAll('input').forEach(el => {
-            this.cardHintsBackup[el.name] = this.shadowRoot.querySelector('credit-card')[el.name];
-        });
+        let string = values.join('').toString();
+        console.log(string);
+        return string
     }
 
     handleInput(e) {
@@ -733,7 +766,7 @@ class Demo extends s {
         const preview = this.previewProps;
         if (target.value) {
             card[target.name] = target.value;
-            if(target.name != 'color')preview[target.name] = `${target.name}="${target.value}"`;
+            if(target.name != 'color') preview[target.name] = `${target.name}="${target.value}"`;
         } else {
             card[target.name] = this.cardHintsBackup[target.name];
             delete preview[target.name];

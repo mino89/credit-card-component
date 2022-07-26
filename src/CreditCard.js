@@ -39,8 +39,6 @@ export class CreditCard extends LitElement {
     this.yearHint = "Your year format is wrong"
     this.cvcHint = "Your cvc format is wrong"
   }
-
-
   render() {
     return html`
       <credit-card-preview  .card="${this.card}" .flipped="${this.flipped}" color="${this.color}"></credit-card-preview>

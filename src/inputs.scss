@@ -1,0 +1,24 @@
+:host{
+    font-family: sans-serif;
+}
+
+fieldset{
+    border: none;
+    margin: 0;
+}
+
+input{
+    width: calc(100% - 1.5em);
+    padding: .75em;
+}
+
+input[type=color]{
+    min-height: 3rem;
+}
+
+button{
+    padding: 1em;
+    margin: 0 auto;
+    display: block;
+    cursor: pointer;
+}

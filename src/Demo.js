@@ -1,8 +1,8 @@
 import { LitElement, html, css } from "lit";
-
 import "./CreditCard.js";
-
-
+import Inputs from './inputs.scss'
+// import hljs from 'highlight.js';
+// import GitHub from '../node_modules/highlight.js/styles/github-dark-dimmed.css'
 export class Demo extends LitElement {
     static get properties() {
         return {
@@ -19,8 +19,9 @@ export class Demo extends LitElement {
         }
     }
     static styles = [
+        // GitHub,
+        Inputs,
         css`
-        @import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css");
         .grid{
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -33,33 +34,54 @@ export class Demo extends LitElement {
             display: flex;
             flex-direction: column;
         }
+        .card{
+            margin-top: 17.5vh;
+            min-width: 25vw;
+        }
+        .badge{
+            display: flex;
+            justify-content: center;
+        }
+        .settings{
+            justify-content: space-between
+        }
         pre {
             white-space: pre-line;
+            background-color: #2b2a2a;
+            color: white;
+            padding: 1rem;
+            margin-bottom: 0;
+            width: calc(100% - 2rem);
         }
     `]
-
     render() {
         return html` 
         <div class="grid">
-            <div class="column">
-                <form @input=${this.handleInput}>
+            <div class="column settings">
+                <form class="card" @input=${this.handleInput}>
                     <fieldset>
-                        <input type="text" id="cardHint" name="cardHint" placeholder="custom card hint">
+                        <h1>Customize your component</h1>
                     </fieldset>
                     <fieldset>
-                        <input type="text" id="monthHint" name="monthHint" placeholder="custom month hint">
+                        <input type="text" name="cardHint" placeholder="custom card hint">
                     </fieldset>
                     <fieldset>
-                        <input type="text" id="yearHint" name="yearHint" placeholder="custom year hint">
+                        <input type="text" name="monthHint" placeholder="custom month hint">
                     </fieldset>
                     <fieldset>
-                        <input type="text" id="cvcHint" name="cvcHint"  placeholder="custom cvc hint">
+                        <input type="text" name="yearHint" placeholder="custom year hint">
                     </fieldset>
                     <fieldset>
-                        <input type="color" .value="${this.color}" @input="${this.changeColorHandler}" id="colorPicker">
+                        <input type="text" name="cvcHint"  placeholder="custom cvc hint">
                     </fieldset>
+                    <fieldset>
+                        <input type="color" name="color" .value="${this.color}" @input="${this.changeColorHandler}" id="colorPicker">
+                    </fieldset>
+                    <a class="badge" href="https://github.com/mino89/credit-card-component">
+                        <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&amp;logo=github&amp;logoColor=white" alt="github-link">
+                    </a>  
                 </form>
-                <pre><code class="language-html">${this.renderPreviewProps()}</code></pre>
+                <pre><code>${this.renderPreviewProps()}</code></pre>
             </div>
             <div class="column" style="background:${this.color}">
                 <credit-card id="credit-card"
@@ -70,26 +92,33 @@ export class Demo extends LitElement {
         `
     }
 
+    // updateHighlight(){
+        
+    //         hljs.highlightElement(this.shadowRoot.querySelector('pre code'));
+     
+    // }
 
-
+    firstUpdated() {
+        this.shadowRoot.querySelectorAll('input').forEach(el => {
+            this.cardHintsBackup[el.name] = this.shadowRoot.querySelector('credit-card')[el.name]
+        })
+        // this.updateHighlight()
+    }
     updated() {
         this.shadowRoot.querySelector('credit-card').requestUpdate()
     }
 
     renderPreviewProps() {
+        console.log()
         const values = [
             `<credit-card \n`,
             `color="${this.color}"> \n`,
             `</credit-card>\n`
         ]
         Object.values(this.previewProps).forEach(value => values.splice(1, 0, value + '\n'))
-        console.log(values)
-        return values
-    }
-    firstUpdated() {
-        this.shadowRoot.querySelectorAll('input').forEach(el => {
-            this.cardHintsBackup[el.name] = this.shadowRoot.querySelector('credit-card')[el.name]
-        })
+        let string = values.join('').toString()
+        console.log(string)
+        return string
     }
 
     handleInput(e) {
@@ -98,7 +127,7 @@ export class Demo extends LitElement {
         const preview = this.previewProps
         if (target.value) {
             card[target.name] = target.value
-            if(target.name != 'color')preview[target.name] = `${target.name}="${target.value}"`
+            if(target.name != 'color') preview[target.name] = `${target.name}="${target.value}"`
         } else {
             card[target.name] = this.cardHintsBackup[target.name]
             delete preview[target.name]

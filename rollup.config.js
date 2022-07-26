@@ -1,5 +1,6 @@
-import resolve from '@rollup/plugin-node-resolve';
+import {nodeResolve} from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
+import commonjs from '@rollup/plugin-commonjs';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
 import copy from 'rollup-plugin-copy';
 import litcss from 'rollup-plugin-lit-css';
@@ -27,8 +28,8 @@ const config = [
       format: 'es',
     },
     plugins: [
+      nodeResolve(),
       minifyHTML(),
-      resolve(),
       litcss({
         include: '/**/*.scss',
         uglify: true,
@@ -46,11 +47,11 @@ const config = [
       format: 'es',
     },
     plugins: [
-      minifyHTML(),
+      nodeResolve(),
+      commonjs({transformMixedEsModules:true}),
       copy(copyConfig),
-      resolve(),
       litcss({
-        include: '/**/*.scss',
+        include: [ '/**/*.scss', '/**/*.css'],
         transform: (data, { filePath }) =>
           Sass.renderSync({ data, file: filePath })
             .css.toString(),

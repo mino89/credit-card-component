@@ -1,20 +1,20 @@
-import { html, css, LitElement, } from 'lit';
+import { html, css, LitElement, } from 'lit'
 
-import Validate from './utils/Validation';
-
+import Validate from './utils/Validation'
+import Inputs from './inputs.scss'
 import './CreditCardPreview.js'
 const validate = new Validate()
 export class CreditCard extends LitElement {
-
-  static get styles() {
-    return css`
+  static styles = [Inputs, css`
       .error input:invalid{border: 1px solid red}
-
+      .hint{
+        margin: 0
+      }
     `
-  }
+  ]
   static get properties() {
     return {
-      card: { type: Object, attribute:true },
+      card: { type: Object, attribute: true },
       color: { type: String },
       flipped: { type: Boolean },
       cardHint: { name: 'card-hint', type: String },
@@ -53,6 +53,7 @@ export class CreditCard extends LitElement {
           maxlength="16" 
           pattern="^[0-9]*$"
           @blur="${this.validateCardHandler}" 
+          placeholder="Card Number"
           aria-describedby="cardHint"
           required>
           <p ?hidden=${!this.errors.includes('number')} class="hint" id="cardHint">${this.cardHint}</p>
@@ -62,7 +63,8 @@ export class CreditCard extends LitElement {
           .value="${this.card.month}"
           maxlength="2"
           pattern="^[0-9]{2}$" 
-          @blur="${this.checkSingle}" 
+          @blur="${this.checkSingle}"
+          placeholder="MM" 
           aria-describedby="monthHint"
           required>
           <p ?hidden=${!this.errors.includes('month')} class="hint" id="monthHint">${this.monthHint}</p>
@@ -72,6 +74,7 @@ export class CreditCard extends LitElement {
           .value="${this.card.year}" 
           maxlength="2"
           pattern="^[0-9]{2}$" 
+          placeholder="YY" 
           aria-describedby="yearHint"
           @blur="${this.checkSingle}" 
           required>
@@ -86,6 +89,7 @@ export class CreditCard extends LitElement {
           @focus="${this.flipCard}"
           @blur="${this.flipCard}"
           aria-describedby="cvcHint"
+          placeholder="CVV" 
           required>
           <p ?hidden=${!this.errors.includes('cvc')} class="hint" id="cvcHint">${this.cvcHint}</p>
         </fieldset>

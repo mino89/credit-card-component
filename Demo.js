@@ -113,6 +113,7 @@ input {
 
 input[type=color] {
   min-height: 3rem;
+  min-width: 3rem;
 }
 
 button {
@@ -726,9 +727,9 @@ class Demo extends s {
     static styles = [
         // GitHub,
         styles$1,
-        r$3`.grid{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}.column{align-items:center;justify-content:center;display:flex;flex-direction:column}.card{margin-top:17.5vh;min-width:25vw}.badge{display:flex;justify-content:center}.settings{justify-content:space-between}pre{white-space:pre-line;background-color:#2b2a2a;color:#fff;padding:1rem;margin-bottom:0;width:calc(100% - 2rem)}`]
+        r$3`.grid{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}.column{align-items:center;justify-content:center;display:flex;flex-direction:column}.card{margin-top:17.5vh;min-width:25vw}.badge{display:flex;justify-content:center}.settings{justify-content:space-between}h3{color:#fff}.color-container{display:flex}pre{white-space:pre-line;background-color:#2b2a2a;color:#fff;padding:1rem;margin-bottom:0;width:calc(100% - 2rem)}`]
     render() {
-        return $`<div class="grid"><div class="column settings"><form class="card" @input="${this.handleInput}"><fieldset><h1>Customize your component</h1></fieldset><fieldset><input type="text" name="cardHint" placeholder="custom card hint"></fieldset><fieldset><input type="text" name="monthHint" placeholder="custom month hint"></fieldset><fieldset><input type="text" name="yearHint" placeholder="custom year hint"></fieldset><fieldset><input type="text" name="cvcHint" placeholder="custom cvc hint"></fieldset><fieldset><input type="color" name="color" .value="${this.color}" @input="${this.changeColorHandler}" id="colorPicker"></fieldset><a class="badge" href="https://github.com/mino89/credit-card-component"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="github-link"></a></form><pre><code>${this.renderPreviewProps()}</code></pre></div><div class="column" style="background:${this.color}"><credit-card id="credit-card" .color="${this.color}"></credit-card></div></div>`
+        return $`<div class="grid"><div class="column settings"><form class="card" @input="${this.handleInput}"><fieldset><h1>${`<credit-card>`}</h1><h2>Customize your component</h2></fieldset><fieldset><input type="text" name="cardHint" placeholder="custom card hint"></fieldset><fieldset><input type="text" name="monthHint" placeholder="custom month hint"></fieldset><fieldset><input type="text" name="yearHint" placeholder="custom year hint"></fieldset><fieldset><input type="text" name="cvcHint" placeholder="custom cvc hint"></fieldset><fieldset class="color-container"><label>Change Color</label> <input type="color" name="color" .value="${this.color}" @input="${this.changeColorHandler}" id="colorPicker"></fieldset><a class="badge" href="https://github.com/mino89/credit-card-component"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="github-link"></a></form><pre><code>${this.renderPreviewProps()}</code></pre></div><div class="column" style="background:${this.color}"><h3>Watch in action</h3><credit-card id="credit-card" .color="${this.color}"></credit-card></div></div>`
     }
 
     // updateHighlight(){

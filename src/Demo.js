@@ -45,6 +45,12 @@ export class Demo extends LitElement {
         .settings{
             justify-content: space-between
         }
+        h3{
+            color: white;
+        }
+        .color-container{
+            display:flex;
+        }
         pre {
             white-space: pre-line;
             background-color: #2b2a2a;
@@ -60,7 +66,8 @@ export class Demo extends LitElement {
             <div class="column settings">
                 <form class="card" @input=${this.handleInput}>
                     <fieldset>
-                        <h1>Customize your component</h1>
+                        <h1>${`<credit-card>`}</h1>
+                        <h2>Customize your component</h2>
                     </fieldset>
                     <fieldset>
                         <input type="text" name="cardHint" placeholder="custom card hint">
@@ -74,7 +81,8 @@ export class Demo extends LitElement {
                     <fieldset>
                         <input type="text" name="cvcHint"  placeholder="custom cvc hint">
                     </fieldset>
-                    <fieldset>
+                    <fieldset class="color-container">
+                        <label>Change Color</label>
                         <input type="color" name="color" .value="${this.color}" @input="${this.changeColorHandler}" id="colorPicker">
                     </fieldset>
                     <a class="badge" href="https://github.com/mino89/credit-card-component">
@@ -84,6 +92,7 @@ export class Demo extends LitElement {
                 <pre><code>${this.renderPreviewProps()}</code></pre>
             </div>
             <div class="column" style="background:${this.color}">
+                <h3>Watch in action</h3>
                 <credit-card id="credit-card"
                     .color="${this.color}">
                 </credit-card>

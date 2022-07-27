@@ -1,12 +1,16 @@
 {
-  "name": "credit-card",
+  "name": "credit-card-component",
   "description": "Webcomponent credit-card following open-wc recommendations",
-  "license": "MIT",
   "homepage": "https://mino89.github.io/credit-card-component/",
-  "author": "credit-card",
   "version": "0.0.0",
-  "main": "index.js",
-  "module": "index.js",
+  "main": "CreditCard.js",
+  "module": "CreditCard.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mino89/credit-card-component"
+  },
+  "author": "Pierdomenico Reitano <pierdomenicoreitano@gmail.com>",
+  "license": "MIT",
   "scripts": {
     "dev": "rollup -c --environment NODE_ENV:development --watch",
     "build": "rollup -c",
